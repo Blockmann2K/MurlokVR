@@ -1,0 +1,331 @@
+<style>
+  .ref-wrap {
+    padding: 1rem 0;
+    font-size: 14px;
+  }
+
+  .ref-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .ref-title {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-border-tertiary);
+  }
+
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .ref-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .tag-feat {
+    background: #E1F5EE;
+    color: #0F6E56;
+  }
+
+  .tag-fix {
+    background: #FCEBEB;
+    color: #A32D2D;
+  }
+
+  .tag-docs {
+    background: #E6F1FB;
+    color: #185FA5;
+  }
+
+  .tag-ref {
+    background: #EEEDFE;
+    color: #534AB7;
+  }
+
+  .tag-test {
+    background: #FAEEDA;
+    color: #854F0B;
+  }
+
+  .tag-chore {
+    background: #F1EFE8;
+    color: #5F5E5A;
+  }
+
+  .tag-exp {
+    background: #FBEAF0;
+    color: #993556;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tag-feat {
+      background: #04342C;
+      color: #9FE1CB;
+    }
+
+    .tag-fix {
+      background: #501313;
+      color: #F7C1C1;
+    }
+
+    .tag-docs {
+      background: #042C53;
+      color: #B5D4F4;
+    }
+
+    .tag-ref {
+      background: #26215C;
+      color: #CECBF6;
+    }
+
+    .tag-test {
+      background: #412402;
+      color: #FAC775;
+    }
+
+    .tag-chore {
+      background: #2C2C2A;
+      color: #B4B2A9;
+    }
+
+    .tag-exp {
+      background: #4B1528;
+      color: #F4C0D1;
+    }
+  }
+
+  .desc {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .example {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-top: 2px;
+  }
+
+  .branch-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .rule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .rule-item {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--border-radius-md);
+    background: var(--color-background-secondary);
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+
+  .rule-icon {
+    color: var(--color-text-tertiary);
+    font-size: 11px;
+    margin-top: 1px;
+  }
+
+  .commit-example {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .ce-type {
+    color: #0F6E56;
+  }
+
+  .ce-scope {
+    color: #185FA5;
+  }
+
+  .ce-desc {
+    color: var(--color-text-primary);
+  }
+
+  .ce-body {
+    color: var(--color-text-tertiary);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .ce-type {
+      color: #9FE1CB;
+    }
+
+    .ce-scope {
+      color: #B5D4F4;
+    }
+  }
+
+  h2.section-header {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin: 0 0 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-tertiary);
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--color-border-tertiary);
+    margin: 1.5rem 0;
+  }
+</style>
+
+<div class="ref-wrap">
+
+  <h2 class="section-header">Branch Naming <span class="pill">GitHub Flow</span></h2>
+
+  <div class="ref-section">
+    <div class="ref-title">Prefixes</div>
+    <div class="ref-grid">
+      <div class="ref-row"><span class="tag tag-feat">feat/</span><span class="desc">New Feature</span></div>
+      <div class="ref-row"><span class="tag tag-fix">fix/</span><span class="desc">Bug Fix</span></div>
+      <div class="ref-row"><span class="tag tag-docs">docs/</span><span class="desc">Documentation Only</span></div>
+      <div class="ref-row"><span class="tag tag-ref">refactor/</span><span class="desc">Restructure, No New Logic</span>
+      </div>
+      <div class="ref-row"><span class="tag tag-test">test/</span><span class="desc">Tests Only</span></div>
+      <div class="ref-row"><span class="tag tag-chore">chore/</span><span class="desc">Maintenance, Config, ...</span>
+      </div>
+      <div class="ref-row"><span class="tag tag-exp">experiment/</span><span class="desc">Uncertain — May Be
+          Discarded</span></div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-title">MurlokVR Examples</div>
+    <div class="rule-list">
+      <div class="rule-item"><span class="rule-icon">→</span><code>feat/simple-hmd</code></div>
+      <div class="rule-item"><span class="rule-icon">→</span><code>feat/runtime-core</code></div>
+      <div class="rule-item"><span class="rule-icon">→</span><code>feat/shared-memory-ipc</code></div>
+      <div class="rule-item"><span class="rule-icon">→</span><code>feat/openvr-adapter</code></div>
+      <div class="rule-item"><span class="rule-icon">→</span><code>fix/sensor-drift</code></div>
+      <div class="rule-item"><span class="rule-icon">→</span><code>experiment/slam-prototype</code></div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-title">Rules</div>
+    <div class="rule-list">
+      <div class="rule-item"><span class="rule-icon">—</span>All Lowercase!</div>
+      <div class="rule-item"><span class="rule-icon">—</span>Hyphens Only, No Underscores or Spaces!</div>
+      <div class="rule-item"><span class="rule-icon">—</span>Short but Descriptive — Readable at a Glance!</div>
+      <div class="rule-item"><span class="rule-icon">—</span>Branch Off <code>main</code> & Merge Back When Solid Yay!
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2 class="section-header">Commit Messages <span class="pill">Conventional Commits</span></h2>
+
+  <div class="ref-section">
+    <div class="ref-title">Format</div>
+    <div class="commit-example">
+      <span class="ce-type">type</span>(<span class="ce-scope">scope</span>): <span class="ce-desc">Short
+        Description</span><br>
+      <span class="ce-body"><br>Optional Body — Explain WHY, Not What!</span>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-title">Types</div>
+    <div class="ref-grid">
+      <div class="ref-row"><span class="tag tag-feat">feat</span><span class="desc">New Feature</span></div>
+      <div class="ref-row"><span class="tag tag-fix">fix</span><span class="desc">Bug Fix</span></div>
+      <div class="ref-row"><span class="tag tag-docs">docs</span><span class="desc">Documentation</span></div>
+      <div class="ref-row"><span class="tag tag-ref">refactor</span><span class="desc">Restructure, No New Logic</span>
+      </div>
+      <div class="ref-row"><span class="tag tag-test">test</span><span class="desc">Tests</span></div>
+      <div class="ref-row"><span class="tag tag-chore">chore</span><span class="desc">Maintenance, Config, ...</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-title">MurlokVR Examples</div>
+    <div class="rule-list">
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">feat</span>(<span class="ce-scope">hmd</span>): Add BNO085 Initialization</code>
+      </div>
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">feat</span>(<span class="ce-scope">adapter</span>): Implement Shared Memory Writer</code>
+      </div>
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">fix</span>(<span class="ce-scope">ipc</span>): Correct Mutex Lock Ordering</code>
+      </div>
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">refactor</span>(<span class="ce-scope">runtime</span>): Split Pose Pipeline Into Modules</code>
+      </div>
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">docs</span>(<span class="ce-scope">readme</span>): Update Architecture Section</code>
+      </div>
+      <div class="rule-item"><span
+          class="rule-icon">→</span><code><span class="ce-type">chore</span>: Update OpenVR Submodule</code></div>
+    </div>
+  </div>
+
+  <div class="ref-section">
+    <div class="ref-title">Rules</div>
+    <div class="rule-list">
+      <div class="rule-item"><span class="rule-icon">—</span>Type and Scope Lowercase! — <em>"feat"</em> Not
+        <em>"Feat"</em>
+      </div>
+      <div class="rule-item"><span class="rule-icon">—</span>Imperative Tense — <em>"Add"</em> Not <em>"Added"</em>
+      </div>
+      <div class="rule-item"><span class="rule-icon">—</span>Scope Is Optional but Useful for a Big Project Like
+        MurlokVR
+      </div>
+      <div class="rule-item"><span class="rule-icon">—</span>Keep the Description Short — Under ~72 Characters</div>
+      <div class="rule-item"><span class="rule-icon">—</span>Body Explains WHY, Not What — the Diff Already
+        Shows the What</div>
+    </div>
+  </div>
+
+</div>
