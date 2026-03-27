@@ -3,4 +3,6 @@ name = "murlokvr-shared-mem"
 version = "0.1.0"
 edition = "2024"
 
-[dependencies]
+[dependencies.windows-sys]
+version = ">=0.59, <=0.61"
+features = ["Win32_Security", "Win32_System_Memory"]
