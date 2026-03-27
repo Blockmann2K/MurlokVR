@@ -1,3 +1,3 @@
 [workspace]
-members = ["src/firmware", "src/host/runtime"]
+members = ["src/firmware", "src/host/runtime", "src/host/shared-mem"]
 resolver = "3"
