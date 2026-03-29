@@ -1,3 +1,5 @@
+use murlokvr_shared_mem::SharedMemory;
+
 fn main() {
-    println!("Hello, World!");
+    let _shared_mem = SharedMemory::new(1024);
 }

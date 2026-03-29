@@ -9,6 +9,9 @@ version = "0.1.0"
 [[package]]
 name = "murlokvr-runtime"
 version = "0.1.0"
+dependencies = [
+ "murlokvr-shared-mem",
+]
 
 [[package]]
 name = "murlokvr-shared-mem"
