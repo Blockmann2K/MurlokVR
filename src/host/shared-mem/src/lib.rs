@@ -1,3 +1,6 @@
+// Copyright (c) 2026 MurlokVR Contributors
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 // Windows API Bindings for Memory Management and Foundation Types
 // Docs: https://docs.rs/windows-sys/0.61.2/windows_sys/
 #![allow(unused_imports)] // TODO: Remove This When We Actually Use the Imports.
