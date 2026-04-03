@@ -1,3 +1,6 @@
+// Copyright (c) 2026 MurlokVR Contributors
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 use murlokvr_shared_mem::SharedMemory;
 
 fn main() {
