@@ -7,7 +7,7 @@
 use windows_sys::{Win32::Foundation::*, Win32::Security::*, Win32::System::Memory::*, core::*};
 
 pub struct SharedMemory {
-    handle: HANDLE,
+    pub handle: HANDLE,
 }
 
 impl SharedMemory {
@@ -37,7 +37,22 @@ impl SharedMemory {
         }
     }
 
-    // ...
+    pub fn map_view(&self) -> Result<MEMORY_MAPPED_VIEW_ADDRESS, WIN32_ERROR> {
+        let address = unsafe { MapViewOfFile(self.handle, FILE_MAP_ALL_ACCESS, 0, 0, 0) };
+
+        match address.Value.is_null() {
+            true => {
+                let error = unsafe { GetLastError() };
+                println!("Failed To Map Shared Memory: {}", error);
+                Err(error)
+            }
+
+            false => {
+                println!("Shared Memory Mapped Successfully!");
+                Ok(address)
+            }
+        }
+    }
 
     // impl Drop for SharedMemory
 }

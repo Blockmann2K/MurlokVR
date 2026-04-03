@@ -9,8 +9,6 @@ use crate::shared_data::SharedData;
 mod shared_data;
 
 fn main() {
-    let _shared_mem = SharedMemory::new(1024);
-
     let shared_data = SharedData::new();
 
     println!("Sequence Counter: {:?}", shared_data.sequence_counter);
@@ -20,4 +18,12 @@ fn main() {
     println!("Quaternion Y: {}", shared_data.quaternion_y);
     println!("Quaternion Z: {}", shared_data.quaternion_z);
     println!("Quaternion W: {}", shared_data.quaternion_w);
+
+    let shared_mem_region = SharedMemory::new(1024);
+
+    let shared_mem_memory_address = shared_mem_region.unwrap().map_view();
+
+    let shared_mem_start_address = shared_mem_memory_address.unwrap().Value;
+
+    println!("{:?}", shared_mem_start_address);
 }

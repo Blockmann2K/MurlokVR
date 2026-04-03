@@ -1,6 +1,8 @@
+// Copyright (c) 2026 MurlokVR Contributors
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 use std::sync::atomic::AtomicU32;
 
-// Need to Add Padding?
 #[repr(C)]
 pub struct SharedData {
     pub sequence_counter: AtomicU32,
