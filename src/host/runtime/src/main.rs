@@ -19,11 +19,19 @@ fn main() {
     println!("Quaternion Z: {}", shared_data.quaternion_z);
     println!("Quaternion W: {}", shared_data.quaternion_w);
 
-    let shared_mem_region = SharedMemory::new(1024);
+    let shared_mem_region = SharedMemory::new(32);
 
     let shared_mem_memory_address = shared_mem_region.unwrap().map_view();
 
     let shared_mem_start_address = shared_mem_memory_address.unwrap().Value;
 
     println!("{:?}", shared_mem_start_address);
+
+    unsafe {
+        (shared_mem_start_address as *mut SharedData).write(shared_data);
+
+        let data = (shared_mem_start_address as *mut SharedData).read();
+
+        println!("{:?}", data);
+    }
 }

@@ -3,6 +3,7 @@
 
 use std::sync::atomic::AtomicU32;
 
+#[derive(Debug)]
 #[repr(C)]
 pub struct SharedData {
     pub sequence_counter: AtomicU32,
