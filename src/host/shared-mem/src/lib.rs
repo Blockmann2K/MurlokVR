@@ -36,4 +36,8 @@ impl SharedMemory {
             }
         }
     }
+
+    // ...
+
+    // impl Drop for SharedMemory
 }
