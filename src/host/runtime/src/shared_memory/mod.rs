@@ -37,7 +37,7 @@ impl<T: SharedMemorySafe> SharedMemory<T> {
     pub fn create() -> Option<Self> {
         let region_size = size_of::<T>() as u32; // Size in Bytes of 'T', Cast to 'u32' for FFI Compatibility.
 
-        println!("DEBUG: Shared Memory Region Size: {} Bits", region_size);
+        println!("DEBUG: Shared Memory Region Size: {} Bytes", region_size);
 
         if region_size == 0 {
             println!("DEBUG: Failed To Define Shared Memory Region Size!");
