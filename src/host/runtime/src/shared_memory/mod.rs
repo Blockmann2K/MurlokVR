@@ -70,17 +70,17 @@ impl<T: SharedMemorySafe> SharedMemory<T> {
     pub fn map_with_all_access(&self) -> Option<MEMORY_MAPPED_VIEW_ADDRESS> {
         let file_mapping_object = self.handle;
 
-        let region_start_address = unsafe {
+        let memory_address = unsafe {
             MapViewOfFile(
-                file_mapping_object, // ...
-                FILE_MAP_ALL_ACCESS, // ...
-                0,                   // ...
-                0,                   // ...
-                0,                   // ...
+                file_mapping_object, // Windows File Mapping Object
+                FILE_MAP_ALL_ACCESS, // Desired Access Permissions
+                0,                   // Upper 32 Bits View Offset
+                0,                   // Lower 32 Bits View Offset
+                0,                   // Amount of Bytes To View | 0 => To the End of the File Mapping Object
             )
         };
 
-        match region_start_address.Value.is_null() {
+        match memory_address.Value.is_null() {
             true => {
                 log_last_error("Map");
                 None
@@ -88,7 +88,7 @@ impl<T: SharedMemorySafe> SharedMemory<T> {
 
             false => {
                 log_success("Mapped");
-                Some(region_start_address)
+                Some(memory_address)
             }
         }
     }
