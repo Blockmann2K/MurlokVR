@@ -1,37 +1,22 @@
 // Copyright (c) 2026 MurlokVR Contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-use murlokvr_shared_mem::SharedMemory;
+use crate::shared_memory::SharedMemory;
 
-use crate::shared_data::SharedData;
+use crate::vr_pose_shared::VRPoseShared;
 
-// Define Our Shared Data Module
-mod shared_data;
+// Define Our Shared Memory Module
+mod shared_memory;
+
+// Define Our VR Pose Shared Module
+mod vr_pose_shared;
 
 fn main() {
-    let shared_data = SharedData::new();
+    let vr_pose_shared = VRPoseShared::new();
 
-    println!("Sequence Counter: {:?}", shared_data.sequence_counter);
-    println!("Device Status: {}", shared_data.device_status);
-    println!("Heartbeat Timestamp: {}", shared_data.heartbeat_timestamp);
-    println!("Quaternion X: {}", shared_data.quaternion_x);
-    println!("Quaternion Y: {}", shared_data.quaternion_y);
-    println!("Quaternion Z: {}", shared_data.quaternion_z);
-    println!("Quaternion W: {}", shared_data.quaternion_w);
+    println!("{:?}", vr_pose_shared);
 
-    let shared_mem_region = SharedMemory::new(32);
+    let shared_memory = SharedMemory::<VRPoseShared>::create();
 
-    let shared_mem_memory_address = shared_mem_region.unwrap().map_view();
-
-    let shared_mem_start_address = shared_mem_memory_address.unwrap().Value;
-
-    println!("{:?}", shared_mem_start_address);
-
-    unsafe {
-        (shared_mem_start_address as *mut SharedData).write(shared_data);
-
-        let data = (shared_mem_start_address as *mut SharedData).read();
-
-        println!("{:?}", data);
-    }
+    shared_memory.unwrap().map_with_all_access();
 }

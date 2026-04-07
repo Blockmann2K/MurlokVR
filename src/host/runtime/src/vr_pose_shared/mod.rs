@@ -3,9 +3,11 @@
 
 use std::sync::atomic::AtomicU32;
 
+use crate::shared_memory::SharedMemorySafe;
+
 #[derive(Debug)]
 #[repr(C)]
-pub struct SharedData {
+pub struct VRPoseShared {
     pub sequence_counter: AtomicU32,
     pub device_status: u32,
     pub heartbeat_timestamp: u64,
@@ -15,7 +17,7 @@ pub struct SharedData {
     pub quaternion_w: f32,
 }
 
-impl SharedData {
+impl VRPoseShared {
     pub fn new() -> Self {
         Self {
             sequence_counter: AtomicU32::new(0),
@@ -28,3 +30,5 @@ impl SharedData {
         }
     }
 }
+
+impl SharedMemorySafe for VRPoseShared {}
