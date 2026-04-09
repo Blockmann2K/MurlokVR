@@ -12,11 +12,19 @@ mod shared_memory;
 mod vr_pose_shared;
 
 fn main() {
-    let vr_pose_shared = VRPoseShared::new();
+    let mut vr_pose_shared = VRPoseShared::new();
 
     println!("{:?}", vr_pose_shared);
 
-    let shared_memory = SharedMemory::<VRPoseShared>::create();
+    let mut shared_memory = SharedMemory::<VRPoseShared>::create();
 
-    shared_memory.unwrap().map_with_all_access();
+    shared_memory.as_mut().unwrap().map_with_all_access();
+
+    shared_memory.as_ref().unwrap().read();
+
+    vr_pose_shared.heartbeat_timestamp = 1;
+
+    shared_memory.as_mut().unwrap().write(vr_pose_shared);
+
+    shared_memory.as_ref().unwrap().read();
 }
