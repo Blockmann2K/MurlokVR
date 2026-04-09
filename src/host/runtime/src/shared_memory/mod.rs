@@ -7,7 +7,7 @@
 #![allow(unused_imports)] // TODO: Remove This When We Actually Use All the Imports.
 
 // The Rust Standard Library
-use std::{marker::PhantomData, mem::size_of, ptr::null};
+use std::{fmt::Debug, marker::PhantomData, mem::size_of, ptr::null};
 
 // Raw Windows API Bindings
 // Docs: https://docs.rs/windows-sys/0.61.2/windows_sys/
@@ -16,9 +16,12 @@ use windows_sys::{Win32::Foundation::*, Win32::Security::*, Win32::System::Memor
 //-----------------------------------------------------------------------------
 // Shared Memory Struct (Windows File Mapping Object)
 //-----------------------------------------------------------------------------
-pub struct SharedMemory<T: SharedMemorySafe> {
+pub struct SharedMemory<T: SharedMemorySafe + Debug> {
     // Raw Windows Handle to File Mapping Object
     handle: HANDLE,
+
+    // Starting Address of the Mapped File Mapping Object
+    memory_address: Option<MEMORY_MAPPED_VIEW_ADDRESS>,
 
     // Zero-Sized Marker That Ties This Struct to 'T' Without Storing a 'T'.
     // Required Because 'T' Appears in the Trait Bound but Not in Any Real Field.
@@ -31,9 +34,9 @@ pub struct SharedMemory<T: SharedMemorySafe> {
 pub trait SharedMemorySafe {} // Implement This Trait for Your Data Type To Enable Shared Memory Support.
 
 //-----------------------------------------------------------------------------
-// Shared Memory – Implementation
+// Shared Memory – Implementations
 //-----------------------------------------------------------------------------
-impl<T: SharedMemorySafe> SharedMemory<T> {
+impl<T: SharedMemorySafe + Debug> SharedMemory<T> {
     pub fn create() -> Option<Self> {
         let region_size = size_of::<T>() as u32; // Size in Bytes of 'T', Cast to 'u32' for FFI Compatibility.
 
@@ -62,12 +65,16 @@ impl<T: SharedMemorySafe> SharedMemory<T> {
 
             false => {
                 log_success("Created");
-                Some(Self { handle, marker: PhantomData })
+                Some(Self {
+                    handle,
+                    memory_address: None,
+                    marker: PhantomData,
+                })
             }
         }
     }
 
-    pub fn map_with_all_access(&self) -> Option<MEMORY_MAPPED_VIEW_ADDRESS> {
+    pub fn map_with_all_access(&mut self) {
         let file_mapping_object = self.handle;
 
         let memory_address = unsafe {
@@ -83,19 +90,85 @@ impl<T: SharedMemorySafe> SharedMemory<T> {
         match memory_address.Value.is_null() {
             true => {
                 log_last_error("Map");
-                None
+
+                self.memory_address = None;
             }
 
             false => {
                 log_success("Mapped");
-                Some(memory_address)
+
+                self.memory_address = Some(memory_address);
             }
         }
     }
 
-    // pub fn read
-    // pub fn write
-    // impl Drop for SharedMemory
+    pub fn read(&self) {
+        validate_memory_address(self.memory_address, "Read");
+
+        let memory_address = match self.memory_address {
+            Some(n) => n,
+            None => return,
+        };
+
+        let memory_address = memory_address.Value as *mut T;
+
+        println!("DEBUG: Reading...");
+        println!("DEBUG: Content: {:?}", unsafe { memory_address.read() });
+    }
+
+    pub fn write(&self, content: T) {
+        validate_memory_address(self.memory_address, "Write");
+
+        let memory_address = match self.memory_address {
+            Some(n) => n,
+            None => return,
+        };
+
+        let memory_address = memory_address.Value as *mut T;
+
+        println!("DEBUG: Writing...");
+        unsafe { memory_address.write(content) };
+    }
+}
+
+impl<T: SharedMemorySafe + Debug> Drop for SharedMemory<T> {
+    fn drop(&mut self) {
+        validate_memory_address(self.memory_address, "Clean Up");
+
+        let memory_address = match self.memory_address {
+            Some(n) => n,
+            None => return,
+        };
+
+        println!("DEBUG: Clean Up File Mapping Object: {:?}!", self.handle);
+
+        let file_mapping_object = self.handle;
+
+        unsafe {
+            UnmapViewOfFile(memory_address);
+
+            CloseHandle(file_mapping_object);
+        }
+
+        log_success("Cleaned Up");
+    }
+}
+
+//-----------------------------------------------------------------------------
+// Validate Memory Address Function
+//-----------------------------------------------------------------------------
+fn validate_memory_address(memory_address: Option<MEMORY_MAPPED_VIEW_ADDRESS>, operation: &str) -> Option<MEMORY_MAPPED_VIEW_ADDRESS> {
+    match memory_address {
+        Some(_) => {
+            println!("DEBUG: Memory Address Is Valid To {}!", operation);
+        }
+
+        None => {
+            println!("DEBUG: Memory Address Is Invalid To {}!", operation);
+        }
+    }
+
+    memory_address
 }
 
 //-----------------------------------------------------------------------------
