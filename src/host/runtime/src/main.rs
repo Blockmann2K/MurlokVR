@@ -1,8 +1,13 @@
 // Copyright (c) 2026 MurlokVR Contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+//-----------------------------------------------------------------------------
+// Dependencies
+//-----------------------------------------------------------------------------
+// Shared Memory Module
 use crate::shared_memory::SharedMemory;
 
+// VR Pose Shared Module
 use crate::vr_pose_shared::VRPoseShared;
 
 // Define Our Shared Memory Module
@@ -12,19 +17,17 @@ mod shared_memory;
 mod vr_pose_shared;
 
 fn main() {
-    let mut vr_pose_shared = VRPoseShared::new();
+    let mut shared_memory = SharedMemory::<VRPoseShared>::create().unwrap();
 
-    println!("{:?}", vr_pose_shared);
+    let vr_pose_shared = shared_memory.map_view_as_mut().unwrap();
 
-    let mut shared_memory = SharedMemory::<VRPoseShared>::create();
+    let mut i = 0;
 
-    shared_memory.as_mut().unwrap().map_with_all_access();
+    while i < 10 {
+        vr_pose_shared.heartbeat_timestamp += 1;
 
-    shared_memory.as_ref().unwrap().read();
+        println!("{:?}", vr_pose_shared);
 
-    vr_pose_shared.heartbeat_timestamp = 1;
-
-    shared_memory.as_mut().unwrap().write(vr_pose_shared);
-
-    shared_memory.as_ref().unwrap().read();
+        i += 1;
+    }
 }
