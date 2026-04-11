@@ -3,11 +3,20 @@
 // Copyright (c) 2026 MurlokVR Contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+//-----------------------------------------------------------------------------
+// Dependencies
+//-----------------------------------------------------------------------------
 #include "hmd_device_driver.h"
 
 #include "driverlog.h"
-#include "vrmath.h"
+// #include "vrmath.h"
+
 #include <string.h>
+
+// VR Pose Shared Memory
+#include <Windows.h>        // Windows API
+#include "shared_memory.h"  // Provides 'OpenVRPoseMemory' & 'PollVRPoseSnapshot'
+#include "vr_pose_shared.h" // Provides 'VRPoseShared' & 'VRPoseSnapshot'
 
 // Let's Create Some Variables for Strings Used in Getting Settings.
 // This Is the Section Where All of the Settings We Want Are Stored. A Section Name Can Be Anything,
@@ -155,7 +164,41 @@ vr::DriverPose_t MyHMDControllerDeviceDriver::GetPose()
 	pose.qWorldFromDriverRotation.w = 1.f;
 	pose.qDriverFromHeadRotation.w = 1.f;
 
-	pose.qRotation.w = 1.f;
+	// Initialize Shared Memory Connection and Read VR Pose Data
+	static bool bIsVRPoseMemoryOpen = false; // Static: Retains Value Across Calls, Only Opens Memory Once.
+	static const VRPoseShared *PoseShared;   // Static: Pointer Persists Across Calls Once Memory Is Opened.
+
+	if (!bIsVRPoseMemoryOpen)
+	{
+		PoseShared = reinterpret_cast<const VRPoseShared *>(OpenVRPoseMemory());
+
+		if (PoseShared != nullptr)
+		{
+			bIsVRPoseMemoryOpen = true;
+
+			DriverLog( "INFO: MurlokVR VR Pose Memory Successfully Opened!" );
+		}
+
+		else
+		{
+			DriverLog( "INFO: MurlokVR Failed To Open VR Pose Memory!" );
+		}
+	}
+
+	if (bIsVRPoseMemoryOpen)
+	{
+		VRPoseSnapshot PoseSnapshot = PollVRPoseSnapshot(PoseShared);
+
+		pose.qRotation.x = PoseSnapshot.quaternion_x;
+		pose.qRotation.y = PoseSnapshot.quaternion_y;
+		pose.qRotation.z = PoseSnapshot.quaternion_z;
+		pose.qRotation.w = PoseSnapshot.quaternion_w;
+	}
+
+	else
+	{
+		pose.qRotation.w = 1.f;
+	}
 
 	pose.vecPosition[ 0 ] = 0.0f;
 	pose.vecPosition[ 1 ] = sin( frame_number_ * 0.01 ) * 0.1f + 1.0f; // Slowly Move the HMD Up and Down.

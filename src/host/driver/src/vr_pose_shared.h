@@ -2,11 +2,16 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 //-----------------------------------------------------------------------------
-// ...
+// Dependencies
 //-----------------------------------------------------------------------------
-#include <atomic>
-#include <cstdint>
+#pragma once // Only Include This Current Header File Once in a Compilation
 
+#include <atomic>  // Provides 'Atomic'
+#include <cstdint> // Provides 'uint32_t' & 'uint64_t'
+
+//-----------------------------------------------------------------------------
+// VR Pose Shared & VR Pose Snapshot Struct
+//-----------------------------------------------------------------------------
 struct VRPoseShared {
   std::atomic<uint32_t> sequence_counter;
   uint32_t device_status;
@@ -25,25 +30,3 @@ struct VRPoseSnapshot {
   float quaternion_z;
   float quaternion_w;
 };
-
-inline VRPoseSnapshot read_pose(const VRPoseShared *pose) {
-  VRPoseSnapshot snapshot;
-
-  while (true) {
-    uint32_t seq1 = pose->sequence_counter.load(std::memory_order_acquire);
-
-    snapshot.device_status = pose->device_status;
-    snapshot.heartbeat_timestamp = pose->heartbeat_timestamp;
-    snapshot.quaternion_x = pose->quaternion_x;
-    snapshot.quaternion_y = pose->quaternion_y;
-    snapshot.quaternion_z = pose->quaternion_z;
-    snapshot.quaternion_w = pose->quaternion_w;
-
-    uint32_t seq2 = pose->sequence_counter.load(std::memory_order_acquire);
-
-    if (seq1 == seq2)
-      break;
-  }
-
-  return snapshot;
-}
