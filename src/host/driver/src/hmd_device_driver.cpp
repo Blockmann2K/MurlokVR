@@ -13,7 +13,6 @@
 
 #include <string.h>
 
-// VR Pose Shared Memory
 #include <Windows.h>        // Windows API
 #include "shared_memory.h"  // Provides 'OpenVRPoseMemory' & 'PollVRPoseSnapshot'
 #include "vr_pose_shared.h" // Provides 'VRPoseShared' & 'VRPoseSnapshot'

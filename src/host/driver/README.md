@@ -9,6 +9,9 @@ A Custom OpenVR (SteamVR) Driver for the MurlokVR VR Headset.
 
 This Driver Integrates the MurlokVR Headset Into SteamVR by Implementing the OpenVR Driver Interface. It Was Built on Top of Valve’s Official `simplehmd` Sample Driver as a Starting Point, Extended With Custom Logic To Handle the MurlokVR Hardware.
 
+The Driver Locates and Opens the Shared Memory Region Created by the Rust Runtime, Reads the VR Pose Data Into a Snapshot, and Maps It to the Appropriate Pose Values in `GetPose()`.
+This Check Occurs on Every `GetPose()` Call To Handle Cases Where the Rust Runtime May Start Before or After SteamVR Is Already Running.
+
 ---
 
 ## Folder Structure
@@ -24,7 +27,9 @@ driver/
 ├── src/
 │   ├── device_provider.cpp/.h          # Entry Point — Registers the HMD With SteamVR
 │   ├── hmd_device_driver.cpp/.h        # Core HMD Logic (Pose, Display, Properties)
-│   └── hmd_driver_factory.cpp          # Driver Factory — Exposes the Driver to OpenVR
+|   ├── hmd_driver_factory.cpp          # Driver Factory — Exposes the Driver to OpenVR
+|   ├── shared_memory.h                 # Shared Memory — Open Shared Memory & Pose Polling
+│   └── vr_pose_shared.h                # VR Pose — VR Pose Shared & VR Pose Snapshot
 ├── CMakeLists.txt                      # CMake Build Configuration
 ├── simplehmd.vcxproj                   # Visual Studio Project File
 └── README.md
