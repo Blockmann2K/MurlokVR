@@ -3,10 +3,6 @@
 version = 4
 
 [[package]]
-name = "murlokvr-firmware"
-version = "0.1.0"
-
-[[package]]
 name = "murlokvr-runtime"
 version = "0.1.0"
 dependencies = [

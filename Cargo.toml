@@ -1,3 +1,0 @@
-[workspace]
-members = ["src/firmware", "src/host/runtime"]
-resolver = "3"
