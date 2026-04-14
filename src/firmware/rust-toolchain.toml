@@ -1,4 +1,4 @@
 [toolchain]
-channel    = "stable-x86_64-pc-windows-msvc"
-components = ["rust-src"]
-targets = ["riscv32imac-unknown-none-elf"]
+channel = "stable-x86_64-pc-windows-msvc"  # Stable Rust for 64-Bit Windows (MSVC)
+components = ["rust-src"]                  # Include Rust Standard Library Source
+targets = ["riscv32imac-unknown-none-elf"] # Cross-Compile Target: RISC-V 32-Bit, Bare-Metal
