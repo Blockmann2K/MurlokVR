@@ -9,6 +9,9 @@ target
 # CMake Build Directory
 build
 
+# Clangd
+.cache
+
 # Visual Studio Code
 .vscode
 
