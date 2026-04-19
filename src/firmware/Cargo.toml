@@ -1,39 +1,42 @@
 [package]
-edition = "2024"
 name = "murlokvr-firmware"
-rust-version = "1.88"
 version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"      # Minimum Required Rust Version
 
 [[bin]]
 name = "murlokvr-firmware"
-path = "./src/bin/main.rs"
+path = "./src/bin/main.rs" # Entry Point Source File
 
 [dependencies]
+# Hardware Abstraction Layer for ESP32-C6
 esp-hal = { version = "~1.0", features = ["esp32c6", "log-04", "unstable"] }
 
-
+# Bootloader Support & Logging Facade
 esp-bootloader-esp-idf = { version = "0.4.0", features = ["esp32c6", "log-04"] }
 log = "0.4.27"
 
+# Safe Interrupt Handling
 critical-section = "1.2.0"
+
+# Prints Backtrace on Panic
 esp-backtrace = { version = "0.18.1", features = [
-  "esp32c6",
-  "panic-handler",
-  "println",
+  "esp32c6",       # Target Chip
+  "panic-handler", # Catches Panics
+  "println",       # Print Panic Info to Serial
 ] }
+
+# Print to Serial
 esp-println = { version = "0.16.1", features = ["esp32c6", "log-04"] }
 
-
 [profile.dev]
-# Rust debug is too slow.
-# For debug builds always builds with some optimization
-opt-level = "s"
+opt-level = "s" # Optimize for Size in Debug (Default Is Too Slow)
 
 [profile.release]
-codegen-units = 1        # LLVM can perform better optimizations using a single thread
-debug = 2
-debug-assertions = false
-incremental = false
-lto = 'fat'
-opt-level = 's'
-overflow-checks = false
+codegen-units = 1        # Single Thread = Better LLVM Optimizations
+debug = 2                # Full Debug Info
+debug-assertions = false # Disable Debug Assertions for Performance
+incremental = false      # Disable Incremental Compilation for Cleaner Builds
+overflow-checks = false  # Disable Overflow Checks for Performance
+lto = 'fat'              # Whole-Program Link-Time Optimization
+opt-level = 's'          # Optimize for Size in Release
