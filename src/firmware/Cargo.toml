@@ -9,7 +9,7 @@ name = "murlokvr-firmware"
 path = "./src/bin/main.rs" # Entry Point Source File
 
 [dependencies]
-# Hardware Abstraction for ESP32-C6
+# Hardware Abstraction Layer for ESP32-C6
 esp-hal = { version = "~1.0", features = ["esp32c6", "log-04", "unstable"] }
 
 # Bootloader Support & Logging Facade

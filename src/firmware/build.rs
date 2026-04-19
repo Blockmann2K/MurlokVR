@@ -1,7 +1,7 @@
 fn main() {
     linker_be_nice();
 
-    // Make Sure 'linkall.x' Is the Last Linker Script (Otherwise Might Cause Problems With Flip-Link)
+    // Make Sure 'linkall.x' Is the Last Linker Script (Otherwise Might Cause Problems With Flip-Link).
     println!("cargo:rustc-link-arg=-Tlinkall.x");
 }
 

@@ -1,40 +1,55 @@
-#![no_std]
-#![no_main]
-#![deny(
-    clippy::mem_forget,
-    reason = "mem::forget is generally not safe to do with esp_hal types, especially those \
-    holding buffers for the duration of a data transfer."
-)]
-#![deny(clippy::large_stack_frames)]
+// Copyright (c) 2026 MurlokVR Contributors
+// SPDX-License-Identifier: MIT OR Apache-2.0
 
+//-----------------------------------------------------------------------------
+// Attributes
+//-----------------------------------------------------------------------------
+#![no_std] // No Rust Standard Library - Bare-Metal Target
+#![no_main] // No Rust Runtime Entry Point - Custom Entry Point via '#[main]'
+#![deny(clippy::mem_forget)] // ...
+#![deny(clippy::large_stack_frames)] // ...
+
+//-----------------------------------------------------------------------------
+// Dependencies
+//-----------------------------------------------------------------------------
+// ESP32 Backtrace
 use esp_backtrace as _;
-use esp_hal::clock::CpuClock;
+
+// ESP32 Hardware Abstraction Layer
 use esp_hal::main;
+
+use esp_hal::clock::CpuClock;
 use esp_hal::time::{Duration, Instant};
+
+// Logging
 use log::info;
 
-// This creates a default app-descriptor required by the esp-idf bootloader.
-// For more information see: <https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/app_image_format.html#application-description>
+//-----------------------------------------------------------------------------
+// App Descriptor
+//-----------------------------------------------------------------------------
+// Create a Default App-Descriptor Required by the ESP-IDF Bootloader.
 esp_bootloader_esp_idf::esp_app_desc!();
 
-#[allow(
-    clippy::large_stack_frames,
-    reason = "it's not unusual to allocate larger buffers etc. in main"
-)]
+//-----------------------------------------------------------------------------
+// Entry Point
+//-----------------------------------------------------------------------------
+#[allow(clippy::large_stack_frames)] // ...
 #[main]
 fn main() -> ! {
-    // generator version: 1.2.0
-
+    // Initialize Logger
     esp_println::logger::init_logger_from_env();
 
+    // Configure the CPU To Run at Its Maximum Supported Frequency.
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::max());
+
+    // Initialize All Peripherals With the Above Config.
     let _peripherals = esp_hal::init(config);
 
+    // Main Loop
     loop {
-        info!("Hello, World!");
+        info!("Arise... MurlokVR!");
+
         let delay_start = Instant::now();
         while delay_start.elapsed() < Duration::from_millis(500) {}
     }
-
-    // for inspiration have a look at the examples at https://github.com/esp-rs/esp-hal/tree/esp-hal-v1.0.0/examples
 }
