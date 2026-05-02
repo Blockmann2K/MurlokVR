@@ -19,7 +19,8 @@ use esp_backtrace as _;
 use esp_hal::main;
 
 use esp_hal::clock::CpuClock;
-use esp_hal::time::{Duration, Instant};
+use esp_hal::spi::master::{Config, Spi};
+use esp_hal::time::{Duration, Instant, Rate};
 
 // Logging
 use log::info;
@@ -43,11 +44,30 @@ fn main() -> ! {
     let config = esp_hal::Config::default().with_cpu_clock(CpuClock::max());
 
     // Initialize All Peripherals With the Above Config.
-    let _peripherals = esp_hal::init(config);
+    let peripherals = esp_hal::init(config);
+
+    // ...
+    let mut bno085 = Spi::new(
+        peripherals.SPI2,
+        Config::default()
+            .with_frequency(Rate::from_khz(1000))
+            .with_mode(esp_hal::spi::Mode::_3),
+    )
+    .unwrap()
+    .with_sck(peripherals.GPIO21)
+    .with_miso(peripherals.GPIO20)
+    .with_mosi(peripherals.GPIO19)
+    .with_cs(peripherals.GPIO18);
 
     // Main Loop
     loop {
         info!("Arise... MurlokVR!");
+
+        let mut data = [0xde, 0xca, 0xfb, 0xad];
+
+        bno085.transfer(&mut data).unwrap();
+
+        info!("{:?}", data);
 
         let delay_start = Instant::now();
         while delay_start.elapsed() < Duration::from_millis(500) {}
