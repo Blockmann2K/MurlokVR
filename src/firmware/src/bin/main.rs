@@ -12,6 +12,9 @@
 //-----------------------------------------------------------------------------
 // Dependencies
 //-----------------------------------------------------------------------------
+// BNO08X Module
+use crate::bno08x::BNO08X;
+
 // ESP32 Backtrace
 use esp_backtrace as _;
 
@@ -19,11 +22,15 @@ use esp_backtrace as _;
 use esp_hal::main;
 
 use esp_hal::clock::CpuClock;
+use esp_hal::gpio::{Input, InputConfig, Level, Output, OutputConfig};
 use esp_hal::spi::master::{Config, Spi};
 use esp_hal::time::{Duration, Instant, Rate};
 
 // Logging
 use log::info;
+
+// Define Our BNO08X Module
+mod bno08x;
 
 //-----------------------------------------------------------------------------
 // App Descriptor
@@ -47,27 +54,41 @@ fn main() -> ! {
     let peripherals = esp_hal::init(config);
 
     // ...
-    let mut bno085 = Spi::new(
+    let _ps1 = Output::new(peripherals.GPIO23, Level::High, OutputConfig::default());
+    let _ps0 = Output::new(peripherals.GPIO22, Level::High, OutputConfig::default());
+
+    // ...
+    let spi = Spi::new(
         peripherals.SPI2,
         Config::default()
             .with_frequency(Rate::from_khz(1000))
             .with_mode(esp_hal::spi::Mode::_3),
     )
-    .unwrap()
+    .expect("ERROR: Failed To Initialize SPI!")
     .with_sck(peripherals.GPIO21)
     .with_miso(peripherals.GPIO20)
     .with_mosi(peripherals.GPIO19)
     .with_cs(peripherals.GPIO18);
 
+    // ...
+    let int = Input::new(peripherals.GPIO15, InputConfig::default());
+
+    // ...
+    let mut bno085 = BNO08X::new(spi, int);
+
     // Main Loop
     loop {
         info!("Arise... MurlokVR!");
 
-        let mut data = [0xde, 0xca, 0xfb, 0xad];
+        let is_ready = bno085.is_ready();
 
-        bno085.transfer(&mut data).unwrap();
+        info!("DEBUG: BNO085 Is Ready: {}", is_ready);
 
-        info!("{:?}", data);
+        let mut buf = [0u8; 32];
+
+        bno085.read(&mut buf);
+
+        info!("DEBUG: {:?}", buf);
 
         let delay_start = Instant::now();
         while delay_start.elapsed() < Duration::from_millis(500) {}
