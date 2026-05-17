@@ -18,8 +18,8 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 
 ### Core Software *(In Progress)*
 - [x] Driver Implementation in C++
-- [*] Runtime Implementation in Rust
-- [ ] Driver / Runtime Integration
+- [x] Runtime Implementation in Rust
+- [x] Driver / Runtime Integration
 - [x] Firmware Implementation in Rust
 
 ### Hardware *(Planned)*
