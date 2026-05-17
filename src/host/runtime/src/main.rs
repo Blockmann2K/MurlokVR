@@ -11,7 +11,9 @@ use crate::shared_memory::SharedMemory;
 use crate::vr_pose_shared::VRPoseShared;
 
 // The Rust Standard Library
+use std::io::{BufRead, BufReader};
 use std::sync::atomic::Ordering;
+use std::time::Duration;
 
 // Define Our Shared Memory Module
 mod shared_memory;
@@ -20,10 +22,34 @@ mod shared_memory;
 mod vr_pose_shared;
 
 fn main() {
-    let mut shared_memory = SharedMemory::<VRPoseShared>::create().unwrap();
+    // let mut shared_memory = SharedMemory::<VRPoseShared>::create().unwrap();
 
-    let vr_pose_shared = shared_memory.map_view_as_mut().unwrap();
+    // let vr_pose_shared = shared_memory.map_view_as_mut().unwrap();
 
+    let ports = serialport::available_ports().expect("ERROR: No Ports Found!");
+
+    for port in ports {
+        println!("DEBUG: {:?}", port);
+    }
+
+    let port = serialport::new("COM4", 115_200)
+        .timeout(Duration::from_millis(1000))
+        .open()
+        .expect("ERROR: Failed To Open Port!");
+
+    let mut buf = String::new();
+
+    let mut reader = BufReader::new(port);
+
+    loop {
+        let _ = reader.read_line(&mut buf);
+
+        println!("{}", buf);
+
+        buf = "".to_string();
+    }
+
+    /*
     let mut angle: f32 = 0.0;
 
     loop {
@@ -40,4 +66,5 @@ fn main() {
 
         angle += 0.0001;
     }
+    */
 }
