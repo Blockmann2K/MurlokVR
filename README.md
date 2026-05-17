@@ -2,7 +2,7 @@
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/6e24df1e0503d4a61cd3d2ec977f46de4c6a3fad/images/MurlokVR_Logo.svg" width="500"/>
 
 # MurlokVR
-A Soon-To-Be-Made Custom "DIY" VR Headset. Primarily Built With Rust 🦀 and Some C++ ⚙️
+A Soon-To-Be-Made Custom "DIY" VR Headset. Primarily Built With Rust 🦀 and C++ (OpenVR Driver) ⚙️
 
 </div>
 
