@@ -25,8 +25,8 @@ use esp_hal::clock::CpuClock;
 use esp_hal::i2c::master::{Config, I2c as I2C, SoftwareTimeout};
 use esp_hal::time::{Duration, Rate};
 
-// Logging
-use log::info;
+// println!
+use esp_println::println;
 
 // Define Our BNO08X Module
 mod bno08x;
@@ -70,8 +70,11 @@ fn main() -> ! {
 
     // Main Loop
     loop {
-        if let Some(value) = bno08x.get_quaternion() {
-            info!("{:?}", value)
+        if let Some(quaternion) = bno08x.get_quaternion() {
+            println!(
+                "X:{},Y:{},Z:{},W:{}",
+                quaternion.x, quaternion.y, quaternion.z, quaternion.w
+            );
         }
     }
 }
