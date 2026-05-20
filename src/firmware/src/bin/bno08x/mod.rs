@@ -13,7 +13,7 @@ use esp_hal::i2c::master::I2c as I2C;
 use esp_hal::time::{Duration, Instant};
 
 // Logging
-use log::info;
+use defmt::info;
 
 // Define Our Constants Module
 mod constants;
