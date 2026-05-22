@@ -6,18 +6,21 @@
 //-----------------------------------------------------------------------------
 
 // ============================================================
-// ==> BNO08X IMU Sensor Address <==
+// ==> BNO08X IMU Sensor <==
 // ============================================================
 
 // I2C Address of the BNO08X (ADR Pin Floating = 0x4B)
 pub const BNO08X_ADDR: u8 = 0x4B;
 
 // ============================================================
-// ==> SHTP Channel Numbers <==
+// ==> SHTP (Sensor Hub Transport Protocol) <==
 // ============================================================
 
 // Channel To Send Commands — Sensor Hub Control Channel
 pub const CHANNEL_CONTROL: u8 = 2;
+
+// Channel To Receive Reports — Sensor Hub Report Channel
+pub const CHANNEL_REPORTS: u8 = 3;
 
 // ============================================================
 // ==> SH-2 Report IDs <==
@@ -30,11 +33,17 @@ pub const SET_FEATURE_CMD: u8 = 0xFD;
 pub const REPORT_ID_ARVR: u8 = 0x29;
 
 // ============================================================
-// ==> Report Interval <==
+// ==> Report Intervals <==
 // ============================================================
 
-// 400 Hz — for Use With ARVR Stabilized Game Rotation Vector
-pub const REPORT_INTERVAL_US_ARVR: u32 = 2_500;
+// Report Interval - 100 Hz
+pub const REPORT_INTERVAL_US_100HZ: u32 = 10_000;
+
+// Report Interval - 200 Hz
+pub const REPORT_INTERVAL_US_200HZ: u32 = 5_000;
+
+// Report Interval - 400 Hz
+pub const REPORT_INTERVAL_US_400HZ: u32 = 2_500;
 
 // ============================================================
 // ==> Q14 Fixed-Point Scale Factor <==
