@@ -9,11 +9,12 @@ use crate::bno08x::constants::*;
 
 // ESP32 Hardware Abstraction Layer
 use esp_hal::Blocking;
+use esp_hal::gpio::Input;
 use esp_hal::i2c::master::I2c as I2C;
 use esp_hal::time::{Duration, Instant};
 
 // Logging
-use log::info;
+use defmt::info;
 
 // Define Our Constants Module
 mod constants;
@@ -23,6 +24,8 @@ mod constants;
 //-----------------------------------------------------------------------------
 pub struct BNO08X {
     i2c: I2C<'static, Blocking>,
+    int: Input<'static>,
+    frequency: Frequency,
     is_drained: bool,
     is_featured: bool,
 }
@@ -42,19 +45,32 @@ pub struct Quaternion {
 }
 
 //-----------------------------------------------------------------------------
+// Frequency Enum
+//-----------------------------------------------------------------------------
+#[allow(unused)]
+#[repr(u32)]
+pub enum Frequency {
+    Default = 100,
+    Fast = 200,
+    Fastest = 400,
+}
+
+//-----------------------------------------------------------------------------
 // BNO08X – Implementations
 //-----------------------------------------------------------------------------
 impl BNO08X {
-    pub fn new(i2c: I2C<'static, Blocking>) -> Self {
+    pub fn new(i2c: I2C<'static, Blocking>, int: Input<'static>, frequency: Frequency) -> Self {
         info!("DEBUG: BNO08X - Waiting for Start-Up...");
 
-        let boot_delay = Instant::now();
-        while boot_delay.elapsed() < Duration::from_millis(500) {}
+        let delay_boot = Instant::now();
+        while delay_boot.elapsed() < Duration::from_millis(500) {}
 
         info!("DEBUG: BNO08X - Waiting Complete!");
 
         Self {
             i2c,
+            int,
+            frequency,
             is_drained: false,
             is_featured: false,
         }
@@ -68,8 +84,8 @@ impl BNO08X {
 
             let _ = self.i2c.read(BNO08X_ADDR, &mut buf);
 
-            let drain_delay = Instant::now();
-            while drain_delay.elapsed() < Duration::from_millis(20) {}
+            let delay_drain = Instant::now();
+            while delay_drain.elapsed() < Duration::from_millis(20) {}
         }
 
         info!("DEBUG: BNO08X - Draining Complete!");
@@ -82,24 +98,30 @@ impl BNO08X {
             panic!("ERROR: BNO08X - Failed To Set Feature; Advertisement Packets Not Drained.");
         }
 
+        let report_interval_us = match self.frequency {
+            Frequency::Default => REPORT_INTERVAL_US_100HZ,
+            Frequency::Fast => REPORT_INTERVAL_US_200HZ,
+            Frequency::Fastest => REPORT_INTERVAL_US_400HZ,
+        };
+
         // ==> Payload <==
         let mut payload = [0u8; 17];
 
-        // ...
+        // Report ID - Set Feature Command
         payload[0] = SET_FEATURE_CMD;
 
-        // ...
+        // Report ID - ARVR Stabilized Game Rotation Vector
         payload[1] = REPORT_ID_ARVR;
 
-        // ...
-        payload[5..9].copy_from_slice(&REPORT_INTERVAL_US_ARVR.to_le_bytes());
+        // Report Interval (LSB -> MSB)
+        payload[5..9].copy_from_slice(&report_interval_us.to_le_bytes());
 
         // ==> SHTP Packet <==
         let mut shtp_packet = [0u8; 21];
 
-        let total_len = (4 + payload.len()) as u16;
+        let len_total = (payload.len() + 4) as u16;
 
-        let len_bytes = total_len.to_le_bytes();
+        let len_bytes = len_total.to_le_bytes();
 
         // Length LSB
         shtp_packet[0] = len_bytes[0];
@@ -110,20 +132,30 @@ impl BNO08X {
         // Channel
         shtp_packet[2] = CHANNEL_CONTROL;
 
-        // SeqNum
+        // Sequence Number
         shtp_packet[3] = 0;
 
         // Payload
         shtp_packet[4..21].copy_from_slice(&payload);
 
-        let _ = self.i2c.write(BNO08X_ADDR, &shtp_packet);
+        let write = self.i2c.write(BNO08X_ADDR, &shtp_packet);
 
-        let cmd_delay = Instant::now();
-        while cmd_delay.elapsed() < Duration::from_millis(100) {}
+        match write {
+            Ok(_) => {
+                let delay_cmd = Instant::now();
+                while delay_cmd.elapsed() < Duration::from_millis(250) {}
 
-        info!("DEBUG: BNO08X - Set Feature Complete!");
+                info!("DEBUG: BNO08X - Set Feature Complete!");
 
-        self.is_featured = true;
+                self.is_featured = true;
+            }
+
+            Err(_) => {
+                info!("DEBUG: BNO08X - Failed To Set Feature!");
+
+                self.is_featured = false;
+            }
+        }
     }
 
     pub fn get_quaternion(&mut self) -> Option<Quaternion> {
@@ -131,11 +163,28 @@ impl BNO08X {
             panic!("ERROR: BNO08X - Failed To Get Quaternion; Feature Not Set.");
         }
 
-        let mut buf = [0u8; 32];
+        // Interrupt Is Active-Low When BNO08X Sensor Data Is Available.
+        if !self.int.is_low() {
+            return None;
+        }
 
-        let _ = self.i2c.read(BNO08X_ADDR, &mut buf);
+        // ...
+        let mut buf = [0u8; 256];
 
-        let base = if buf[4] == 0xFB { 13 } else { 8 };
+        self.i2c.read(BNO08X_ADDR, &mut buf).ok()?;
+
+        // ...
+        if buf[2] != CHANNEL_REPORTS {
+            return None;
+        }
+
+        // ...
+        if buf[9] != REPORT_ID_ARVR {
+            return None;
+        }
+
+        // ...
+        let base = if buf[4] == 0xFB { 13 } else { return None };
 
         let x_raw = i16::from_le_bytes([buf[base], buf[base + 1]]);
         let y_raw = i16::from_le_bytes([buf[base + 2], buf[base + 3]]);
@@ -160,13 +209,19 @@ impl BNO08X {
 // Quaternion – Implementations
 //-----------------------------------------------------------------------------
 impl Quaternion {
-    fn sum_squared(&self) -> f32 {
-        (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w)
-    }
-
     fn is_valid(&self) -> bool {
-        let sum_squared = self.sum_squared();
+        let sum_squared =
+            (self.x * self.x) + (self.y * self.y) + (self.z * self.z) + (self.w * self.w);
 
         sum_squared > 0.0 && sum_squared <= 1.0
+    }
+
+    pub fn new() -> Self {
+        Self {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 0.0,
+        }
     }
 }

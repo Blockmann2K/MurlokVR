@@ -1,6 +1,6 @@
 fn main() {
     linker_be_nice();
-
+    println!("cargo:rustc-link-arg=-Tdefmt.x");
     // Make Sure 'linkall.x' Is the Last Linker Script (Otherwise Might Cause Problems With Flip-Link).
     println!("cargo:rustc-link-arg=-Tlinkall.x");
 }
@@ -16,7 +16,9 @@ fn linker_be_nice() {
             "undefined-symbol" => match what.as_str() {
                 what if what.starts_with("_defmt_") => {
                     eprintln!();
-                    eprintln!("💡 `defmt` Not Found - Make Sure `defmt.x` Is Added as a Linker Script and You Have Included `use defmt_rtt as _;`.");
+                    eprintln!(
+                        "💡 `defmt` Not Found - Make Sure `defmt.x` Is Added as a Linker Script and You Have Included `use defmt_rtt as _;`."
+                    );
                     eprintln!();
                 }
 
@@ -28,19 +30,32 @@ fn linker_be_nice() {
 
                 what if what.starts_with("esp_rtos_") => {
                     eprintln!();
-                    eprintln!("💡 `esp-radio` Has No Scheduler Enabled. Make Sure You Have Initialized `esp-rtos` or Provided an External Scheduler.");
+                    eprintln!(
+                        "💡 `esp-radio` Has No Scheduler Enabled. Make Sure You Have Initialized `esp-rtos` or Provided an External Scheduler."
+                    );
                     eprintln!();
                 }
 
                 "embedded_test_linker_file_not_added_to_rustflags" => {
                     eprintln!();
-                    eprintln!("💡 `embedded-test` Not Found - Make Sure `embedded-test.x` Is Added as a Linker Script for Tests.");
+                    eprintln!(
+                        "💡 `embedded-test` Not Found - Make Sure `embedded-test.x` Is Added as a Linker Script for Tests."
+                    );
                     eprintln!();
                 }
 
-                "free" | "malloc" | "calloc" | "get_free_internal_heap_size" | "malloc_internal" | "realloc_internal" | "calloc_internal" | "free_internal" => {
+                "free"
+                | "malloc"
+                | "calloc"
+                | "get_free_internal_heap_size"
+                | "malloc_internal"
+                | "realloc_internal"
+                | "calloc_internal"
+                | "free_internal" => {
                     eprintln!();
-                    eprintln!("💡 Did You Forget the `esp-alloc` Dependency or Didn't Enable the `compat` Feature on It?");
+                    eprintln!(
+                        "💡 Did You Forget the `esp-alloc` Dependency or Didn't Enable the `compat` Feature on It?"
+                    );
                     eprintln!();
                 }
 
@@ -56,5 +71,8 @@ fn linker_be_nice() {
         std::process::exit(0);
     }
 
-    println!("cargo:rustc-link-arg=--error-handling-script={}", std::env::current_exe().unwrap().display());
+    println!(
+        "cargo:rustc-link-arg=--error-handling-script={}",
+        std::env::current_exe().unwrap().display()
+    );
 }
