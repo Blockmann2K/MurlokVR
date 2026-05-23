@@ -22,7 +22,7 @@ use panic_rtt_target as _;
 use esp_hal::main;
 
 use esp_hal::clock::CpuClock;
-use esp_hal::gpio::{Input, InputConfig};
+use esp_hal::gpio::{Input, InputConfig, Level, Output, OutputConfig};
 use esp_hal::i2c::master::{Config, I2c as I2C, SoftwareTimeout};
 use esp_hal::time::{Duration, Rate};
 
@@ -52,6 +52,9 @@ fn main() -> ! {
 
     // Initialize All Peripherals With the Above Config.
     let peripherals = esp_hal::init(config);
+
+    // Power Indicator
+    let _led_white = Output::new(peripherals.GPIO11, Level::High, OutputConfig::default());
 
     // BNO08X - I2C
     let i2c = I2C::new(
