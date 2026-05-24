@@ -36,7 +36,7 @@ pub struct BNO08X {
 //-----------------------------------------------------------------------------
 // Quaternion Struct
 //-----------------------------------------------------------------------------
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Quaternion {
     pub x: f32,
     pub y: f32,
@@ -47,16 +47,13 @@ pub struct Quaternion {
 //-----------------------------------------------------------------------------
 // Frequency Enum
 //-----------------------------------------------------------------------------
-#[allow(unused)]
 #[repr(u32)]
 pub enum Frequency {
-    Default = 100,
-    Fast = 200,
     Fastest = 400,
 }
 
 //-----------------------------------------------------------------------------
-// BNO08X – Implementations
+// BNO08X – Implementation
 //-----------------------------------------------------------------------------
 impl BNO08X {
     pub fn new(i2c: I2C<'static, Blocking>, int: Input<'static>, frequency: Frequency) -> Self {
@@ -99,8 +96,6 @@ impl BNO08X {
         }
 
         let report_interval_us = match self.frequency {
-            Frequency::Default => REPORT_INTERVAL_US_100HZ,
-            Frequency::Fast => REPORT_INTERVAL_US_200HZ,
             Frequency::Fastest => REPORT_INTERVAL_US_400HZ,
         };
 
@@ -163,27 +158,28 @@ impl BNO08X {
             panic!("ERROR: BNO08X - Failed To Get Quaternion; Feature Not Set.");
         }
 
-        // Interrupt Is Active-Low When BNO08X Sensor Data Is Available.
+        // Interrupt Is Active-Low When BNO08X Sensor Data Is Available
         if !self.int.is_low() {
             return None;
         }
 
-        // ...
+        // ==> SHTP Packet <==
         let mut buf = [0u8; 256];
 
+        // Convert Result -> Option and Return 'None' on Error
         self.i2c.read(BNO08X_ADDR, &mut buf).ok()?;
 
-        // ...
+        // Report Channel
         if buf[2] != CHANNEL_REPORTS {
             return None;
         }
 
-        // ...
+        // Report ID
         if buf[9] != REPORT_ID_ARVR {
             return None;
         }
 
-        // ...
+        // ==> Payload <==
         let base = if buf[4] == 0xFB { 13 } else { return None };
 
         let x_raw = i16::from_le_bytes([buf[base], buf[base + 1]]);
@@ -206,7 +202,7 @@ impl BNO08X {
 }
 
 //-----------------------------------------------------------------------------
-// Quaternion – Implementations
+// Quaternion – Implementation
 //-----------------------------------------------------------------------------
 impl Quaternion {
     fn is_valid(&self) -> bool {

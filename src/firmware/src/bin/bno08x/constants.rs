@@ -36,12 +36,6 @@ pub const REPORT_ID_ARVR: u8 = 0x29;
 // ==> Report Intervals <==
 // ============================================================
 
-// Report Interval - 100 Hz
-pub const REPORT_INTERVAL_US_100HZ: u32 = 10_000;
-
-// Report Interval - 200 Hz
-pub const REPORT_INTERVAL_US_200HZ: u32 = 5_000;
-
 // Report Interval - 400 Hz
 pub const REPORT_INTERVAL_US_400HZ: u32 = 2_500;
 

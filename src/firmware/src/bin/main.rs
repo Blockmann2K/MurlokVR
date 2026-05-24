@@ -15,6 +15,9 @@
 // BNO08X Module
 use crate::bno08x::*;
 
+// RGB LED Module
+use crate::rgb_led::*;
+
 // RTT Panic Handler
 use panic_rtt_target as _;
 
@@ -32,6 +35,9 @@ use defmt::println;
 // Define Our BNO08X Module
 mod bno08x;
 
+// Define Our RGB LED Module
+mod rgb_led;
+
 //-----------------------------------------------------------------------------
 // App Descriptor
 //-----------------------------------------------------------------------------
@@ -44,7 +50,7 @@ esp_bootloader_esp_idf::esp_app_desc!();
 #[allow(clippy::large_stack_frames)] // ...
 #[main]
 fn main() -> ! {
-    // Initialize RTT for 'defmt'.
+    // Initialize RTT for 'defmt'
     rtt_target::rtt_init_defmt!();
 
     // Configure the CPU To Run at Its Maximum Supported Frequency.
@@ -53,15 +59,22 @@ fn main() -> ! {
     // Initialize All Peripherals With the Above Config.
     let peripherals = esp_hal::init(config);
 
-    // Power Indicator
+    // Power Indicator - White LED
     let _led_white = Output::new(peripherals.GPIO11, Level::High, OutputConfig::default());
+
+    // Status Indicator - RGB LED
+    let red = Output::new(peripherals.GPIO10, Level::Low, OutputConfig::default());
+    let green = Output::new(peripherals.GPIO1, Level::Low, OutputConfig::default());
+    let blue = Output::new(peripherals.GPIO0, Level::Low, OutputConfig::default());
+
+    let mut rgb_led = Led::new(red, green, blue);
 
     // BNO08X - I2C
     let i2c = I2C::new(
         peripherals.I2C0,
         Config::default()
-            .with_frequency(Rate::from_khz(Frequency::Fastest as u32))
-            .with_software_timeout(SoftwareTimeout::PerByte(Duration::from_millis(10))), // Reduce Clock Stretching
+            .with_frequency(Rate::from_khz(1000)) // Fast-Mode Plus I²C (1000 kHz)
+            .with_software_timeout(SoftwareTimeout::PerByte(Duration::from_millis(10))), // Tolerate Brief Clock Stretching
     )
     .expect("ERROR: Failed To Initialize I2C Peripheral!")
     .with_scl(peripherals.GPIO22)
@@ -70,7 +83,7 @@ fn main() -> ! {
     // BNO08X - Interrupt
     let int = Input::new(peripherals.GPIO21, InputConfig::default());
 
-    // BNO08X IMU Sensor
+    // BNO08X IMU Sensor - Read Quaternions
     let mut bno08x = BNO08X::new(i2c, int, Frequency::Fastest);
 
     bno08x.drain_advertisement_packets();
@@ -89,6 +102,12 @@ fn main() -> ! {
                     "X:{},Y:{},Z:{},W:{}",
                     curr_quat.x, curr_quat.y, curr_quat.z, curr_quat.w
                 );
+
+                if prev_quat == curr_quat {
+                    rgb_led.try_set_color(Colors::Yellow);
+                } else {
+                    rgb_led.try_set_color(Colors::Green);
+                }
 
                 prev_quat = curr_quat;
             }
