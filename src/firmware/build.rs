@@ -1,6 +1,8 @@
+// Copyright (c) 2026 MurlokVR Contributors
+// SPDX-License-Identifier: MIT OR Apache-2.0
+
 fn main() {
     linker_be_nice();
-    println!("cargo:rustc-link-arg=-Tdefmt.x");
     // Make Sure 'linkall.x' Is the Last Linker Script (Otherwise Might Cause Problems With Flip-Link).
     println!("cargo:rustc-link-arg=-Tlinkall.x");
 }

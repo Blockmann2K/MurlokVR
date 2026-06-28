@@ -1,8 +1,11 @@
+# Copyright (c) 2026 MurlokVR Contributors
+# SPDX-License-Identifier: MIT OR Apache-2.0
+
 [target.riscv32imac-unknown-none-elf]
-runner = "probe-rs run --chip=esp32c6 --preverify --always-print-stacktrace --no-location --catch-hardfault"
+runner = "espflash flash --chip esp32c6"
 
 [env]
-DEFMT_LOG = "info"
+ESP_LOG = "info"
 
 [build]
 rustflags = [
