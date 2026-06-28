@@ -46,10 +46,30 @@ fn main() {
 
         vr_pose_shared.sequence_counter.fetch_add(1, Ordering::Release);
 
-        vr_pose_shared.quaternion_x = parts[0].trim_start_matches("X:").trim().parse().unwrap();
-        vr_pose_shared.quaternion_y = parts[1].trim_start_matches("Y:").trim().parse().unwrap();
-        vr_pose_shared.quaternion_z = parts[2].trim_start_matches("Z:").trim().parse().unwrap();
-        vr_pose_shared.quaternion_w = parts[3].trim_start_matches("W:").trim().parse().unwrap();
+        let x = match parts[0].trim_start_matches("X:").trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
+
+        let y = match parts[1].trim_start_matches("Y:").trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
+
+        let z = match parts[2].trim_start_matches("Z:").trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
+
+        let w = match parts[3].trim_start_matches("W:").trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
+
+        vr_pose_shared.quaternion_x = x;
+        vr_pose_shared.quaternion_y = y;
+        vr_pose_shared.quaternion_z = z;
+        vr_pose_shared.quaternion_w = w;
 
         vr_pose_shared.sequence_counter.fetch_add(1, Ordering::Release);
 
