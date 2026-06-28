@@ -16,13 +16,13 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 ### Foundation
 - [x] Basic Project Structure
 
-### Core Software *(In Progress)*
+### Core Software *(Implemented)*
 - [x] Driver Implementation in C++
 - [x] Runtime Implementation in Rust
 - [x] Driver / Runtime Integration
 - [x] Firmware Implementation in Rust
 
-### Hardware *(Planned)*
+### Hardware *(In Progress)*
 - [ ] Hardware Design
 
 ### Testing & Documentation *(Planned)*
