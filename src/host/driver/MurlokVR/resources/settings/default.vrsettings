@@ -1,17 +1,17 @@
 {
-	"driver_MurlokVR": {
-		"enable": true,
-		"serial_number": "MurlokVR-SN001",
-		"model_number": "MurlokVR-MN001"
-	},
-	"MurlokVR_display": {
-	    "window_x": 0,
-	    "window_y": 0,
-	    "window_width": 1440,
-	    "window_height": 1440,
-	    "render_width": 720,
-	    "render_height": 720,
-	    "vsync_to_photons": 0.011,
-	    "display_frequency": 90
-	}
+    "driver_MurlokVR": {
+        "enable": true,
+        "serial_number": "MurlokVR-SN001",
+        "model_number": "MurlokVR-MN001"
+    },
+    "MurlokVR_display": {
+        "window_x": 3840,
+        "window_y": 0,
+        "window_width": 1440,
+        "window_height": 1440,
+        "render_width": 720,
+        "render_height": 720,
+        "vsync_to_photons": 0.011,
+        "display_frequency": 90
+    }
 }
