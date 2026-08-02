@@ -1,6 +1,11 @@
 // Copyright (c) 2026 MurlokVR Contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+/* ! ToDo's:
+        - [] Add Display Recognition With Proper Display Setup System.
+        - [] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
+*/
+
 //-----------------------------------------------------------------------------
 // Dependencies
 //-----------------------------------------------------------------------------
@@ -11,7 +16,7 @@ use crate::shared_memory::SharedMemory;
 use crate::vr_pose_shared::VRPoseShared;
 
 // The Rust Standard Library
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead, BufReader, Write};
 use std::sync::atomic::Ordering;
 use std::time::Duration;
 
@@ -22,11 +27,36 @@ mod shared_memory;
 mod vr_pose_shared;
 
 fn main() {
+    println!();
+    println!("┌─────────────────────────────────────────────┐");
+    println!("│            >> MurlokVR Runtime <<           │");
+    println!("├─────────────────────────────────────────────┤");
+    println!("│ Version  : v{}                           │", env!("CARGO_PKG_VERSION"));
+    println!("│ Status   : Experimental                     │");
+    println!("│ Target   : ESP32-C6                         │");
+    println!("│ Protocol : Serial                           │");
+    println!("│ Author   : MurlokVR Contributors            │");
+    println!("└─────────────────────────────────────────────┘");
+    println!();
+    print!("Specify the ESP32 Port (Press Enter for COM4 - Default): ");
+
+    io::stdout().flush().expect("ERROR: Failed To Flush!");
+
+    let mut port_buf = String::new();
+
+    io::stdin().read_line(&mut port_buf).expect("ERROR: Failed To Read Line!");
+
+    let mut port_select = port_buf.trim();
+
+    if port_select.is_empty() {
+        port_select = "COM4"; // Fall Back to Default Port
+    }
+
     let mut shared_memory = SharedMemory::<VRPoseShared>::create().unwrap();
 
     let vr_pose_shared = shared_memory.map_view_as_mut().unwrap();
 
-    let port = serialport::new("COM4", 115_200)
+    let port = serialport::new(port_select, 115_200)
         .timeout(Duration::from_millis(1000))
         .open()
         .expect("ERROR: Failed To Open Port!");
