@@ -19,9 +19,13 @@ use crate::vr_pose_shared::VRPoseShared;
 use crate::vr_display_properties::VRDisplayProperties;
 
 // The Rust Standard Library
+use std::f32;
 use std::io::{self, BufRead, BufReader, Write};
 use std::sync::atomic::Ordering;
 use std::time::Duration;
+
+// Nalgebra (General-Purpose Maths) Crate
+use nalgebra::{Quaternion, UnitQuaternion, Vector3};
 
 // Define Our Shared Memory Module
 mod shared_memory;
@@ -84,6 +88,12 @@ fn main() {
         .expect("ERROR: Failed To Open Port!");
 
     // ==> Read, Parse & Send Quaternions <==
+    let offset_axis = Vector3::y_axis(); // Rotation Offset Axis (Y)
+
+    let offset_angle = f32::consts::FRAC_PI_2; // 90° Rotation Offset
+
+    let offset_unit_quat = UnitQuaternion::from_axis_angle(&offset_axis, offset_angle);
+
     let mut buf = String::new();
 
     let mut reader = BufReader::new(port);
@@ -99,30 +109,38 @@ fn main() {
 
         vr_pose_shared.sequence_counter.fetch_add(1, Ordering::Release);
 
-        let quat_x = match parts[0].trim_start_matches("X:").trim().parse() {
+        let quat_x: f32 = match parts[0].trim_start_matches("X:").trim().parse() {
             Ok(value) => value,
             Err(_) => continue,
         };
 
-        let quat_y = match parts[1].trim_start_matches("Y:").trim().parse() {
+        let quat_y: f32 = match parts[1].trim_start_matches("Y:").trim().parse() {
             Ok(value) => value,
             Err(_) => continue,
         };
 
-        let quat_z = match parts[2].trim_start_matches("Z:").trim().parse() {
+        let quat_z: f32 = match parts[2].trim_start_matches("Z:").trim().parse() {
             Ok(value) => value,
             Err(_) => continue,
         };
 
-        let quat_w = match parts[3].trim_start_matches("W:").trim().parse() {
+        let quat_w: f32 = match parts[3].trim_start_matches("W:").trim().parse() {
             Ok(value) => value,
             Err(_) => continue,
         };
 
-        vr_pose_shared.quaternion_x = quat_x;
-        vr_pose_shared.quaternion_y = quat_y;
-        vr_pose_shared.quaternion_z = quat_z;
-        vr_pose_shared.quaternion_w = quat_w;
+        let raw_quat = Quaternion::new(quat_w, -quat_x, -quat_y, quat_z); // Compensate for IMU's Physical Mounting Orientation
+
+        let raw_unit_quat = UnitQuaternion::from_quaternion(raw_quat);
+
+        let new_unit_quat = offset_unit_quat * raw_unit_quat;
+
+        let new_quat = new_unit_quat.into_inner();
+
+        vr_pose_shared.quaternion_x = new_quat.j; // Map Quaternion Y -> X
+        vr_pose_shared.quaternion_y = new_quat.i; // Map Quaternion X -> Y
+        vr_pose_shared.quaternion_z = new_quat.k;
+        vr_pose_shared.quaternion_w = new_quat.w;
 
         vr_pose_shared.sequence_counter.fetch_add(1, Ordering::Release);
 
