@@ -1,10 +1,6 @@
 // Copyright (c) 2026 MurlokVR Contributors
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
-/* ! ToDo's:
-        - [] Replace the Hardcoded Path With a More Versatile Path.
-*/
-
 //-----------------------------------------------------------------------------
 // Dependencies
 //-----------------------------------------------------------------------------
@@ -22,9 +18,10 @@ const DEFAULT_DISPLAY_Y: i32 = 0;
 const DEFAULT_DISPLAY_WIDTH: u32 = 1920;
 const DEFAULT_DISPLAY_HEIGHT: u32 = 1080;
 const DEFAULT_DISPLAY_FREQUENCY: f32 = 60.0;
+const DEFAULT_IS_PRIMARY: bool = true;
 
 const VR_DISPLAY_MANUFACTOR_NAME: &str = "Wisecoco";
-const VR_DISPLAY_SETTINGS_FILE: &str = "D:/Repositories/MurlokVR/src/host/driver/MurlokVR/resources/settings/default.vrsettings";
+const VR_DISPLAY_SETTINGS_FILE: &str = "../driver/MurlokVR/resources/settings/default.vrsettings";
 
 //-----------------------------------------------------------------------------
 // VR Display Properties Struct
@@ -38,6 +35,7 @@ pub struct VRDisplayProperties {
     render_width: u32,
     render_height: u32,
     display_frequency: f32,
+    is_primary: bool,
 }
 
 //-----------------------------------------------------------------------------
@@ -58,6 +56,7 @@ impl VRDisplayProperties {
                 self.render_width = display_info.width / 2;
                 self.render_height = display_info.height / 2;
                 self.display_frequency = display_info.frequency;
+                self.is_primary = display_info.is_primary;
 
                 is_vr_display_found = true;
 
@@ -71,6 +70,10 @@ impl VRDisplayProperties {
     }
 
     pub fn apply_vr_display_properties(&self) {
+        if !self.is_primary {
+            panic!("ERROR: VR Display Is Not Primary Display!")
+        }
+
         let content = fs::read_to_string(VR_DISPLAY_SETTINGS_FILE).expect("ERROR: Failed To Read File To String!");
 
         let mut vr_display_settings = json::parse(&content).expect("ERROR: Failed To Parse JSON!");
@@ -97,6 +100,7 @@ impl Default for VRDisplayProperties {
             render_width: DEFAULT_DISPLAY_WIDTH / 2,
             render_height: DEFAULT_DISPLAY_HEIGHT / 2,
             display_frequency: DEFAULT_DISPLAY_FREQUENCY,
+            is_primary: DEFAULT_IS_PRIMARY,
         }
     }
 }

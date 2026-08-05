@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 /* ! ToDo's:
-        - [] Add Display Recognition With Proper Display Setup System.
         - [] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
 */
 
@@ -52,6 +51,10 @@ fn main() {
     println!("│ Target   : ESP32-C6                         │");
     println!("│ Protocol : Serial                           │");
     println!("│ Author   : MurlokVR Contributors            │");
+    println!("│                                             │");
+    println!("│ Notice   :                                  │");
+    println!("│ Ensure VR Display Is 'Landscape (Flipped)'  │");
+    println!("│ Ensure VR Display Is 'Primary'              │");
     println!("└─────────────────────────────────────────────┘");
     println!();
     print!("Specify the ESP32 Port (Press Enter for COM4 - Default): ");
@@ -87,13 +90,14 @@ fn main() {
         .open()
         .expect("ERROR: Failed To Open Port!");
 
-    // ==> Read, Parse & Send Quaternions <==
+    // ==> Define Pose Orientation Offset <==
     let offset_axis = Vector3::y_axis(); // Rotation Offset Axis (Y)
 
     let offset_angle = f32::consts::FRAC_PI_2; // 90° Rotation Offset
 
     let offset_unit_quat = UnitQuaternion::from_axis_angle(&offset_axis, offset_angle);
 
+    // ==> Read, Parse & Send Quaternions <==
     let mut buf = String::new();
 
     let mut reader = BufReader::new(port);
@@ -129,14 +133,16 @@ fn main() {
             Err(_) => continue,
         };
 
-        let raw_quat = Quaternion::new(quat_w, -quat_x, -quat_y, quat_z); // Compensate for IMU's Physical Mounting Orientation
+        // Apply IMU's Mounting and Pose Corrections
+        let raw_quat = Quaternion::new(quat_w, -quat_x, -quat_y, quat_z); // Compensate for IMU's Mounting Orientation
 
         let raw_unit_quat = UnitQuaternion::from_quaternion(raw_quat);
 
-        let new_unit_quat = offset_unit_quat * raw_unit_quat;
+        let new_unit_quat = offset_unit_quat * raw_unit_quat; // Apply Pose Orientation Offset
 
         let new_quat = new_unit_quat.into_inner();
 
+        // Translate From IMU's to OpenVR Axes
         vr_pose_shared.quaternion_x = new_quat.j; // Map Quaternion Y -> X
         vr_pose_shared.quaternion_y = new_quat.i; // Map Quaternion X -> Y
         vr_pose_shared.quaternion_z = new_quat.k;
