@@ -3,6 +3,7 @@
 
 /* ! ToDo's:
         - [] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
+        - [] Fix the Rotation Issue When the Headset (Firmware) Is Starting in a `Different Position` Than Intended.
 */
 
 //-----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/6e24df1e0503d4a61cd3d2ec977f46de4c6a3fad/images/MurlokVR_Logo.svg" width="500"/>
 
 # MurlokVR
-A Soon-To-Be-Made Custom "DIY" VR Headset. Built With Rust 🦀 and C++ (OpenVR Driver) ⚙️
+A Stupid Simple Custom "DIY" VR Headset. Built With Rust 🦀 and C++ (OpenVR Driver) ⚙️
 
 </div>
 
@@ -16,20 +16,26 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 ### Foundation
 - [x] Basic Project Structure
 
-### Core Software *(Implemented)*
+### Core Software
+- [x] Firmware Implementation in Rust
 - [x] Driver Implementation in C++
 - [x] Runtime Implementation in Rust
 - [x] Driver / Runtime Integration
-- [x] Firmware Implementation in Rust
 
-### Hardware *(In Progress)*
-- [ ] Hardware Design
+### Hardware
+- [x] Hardware Design
 
-### Testing & Documentation *(Planned)*
-- [ ] Testing
-- [ ] Documentation
+### Testing & Documentation
+- [x] Testing
+- [&] Documentation
 
 > *More Milestones To Be Added As the Project Evolves...*
+
+---
+
+## Known Bugs
+- [] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
+- [] Fix the Rotation Issue When the Headset (Firmware) Is Starting in a `Different Position` Than Intended.
 
 ---
 
