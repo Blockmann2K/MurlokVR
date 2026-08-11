@@ -11,6 +11,49 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 
 ---
 
+## Overview Architecture
+The MurlokVR Headset Follows a Simple Pipeline Approach Which Is Drawn as a Diagram Below:
+
+<div align="center">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260811_Overview_Architecture.png" width="500">
+</div>
+
+---
+
+## Overview Components
+Components:
+- Microcontroller:
+    - `Waveshare ESP32-C6-(N16) (16 MB Flash Memory)`
+- Displays:
+    - `Wisecoco 2.9-Inch, 1440 × 1440, 90 Hz, Dual Displays Including Display Driver Board`
+- IMU Sensor:
+    - `TENSTAR BNO085`
+- Lenses:
+    - `2x Stacked Fresnel Lenses (2x FL 30 & 2x FL 40)`
+        - `Eye <-> FL 40 Lens (Flat Side) <-> FL 30 Lens (Flat Side) <-> Displays`
+- LEDs:
+    - `1x White LED`
+    - `1x RGB LED`
+- Resistors:
+    - `4x 220 Ω THT`
+- Miscellaneous:
+    - `HDMI-Cable, USB-Cables, Jumper Wires, ...`
+
+---
+
+## Headset Design
+
+<div align="center">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Home.png" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Left.png" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Back.png" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="400">
+</div>
+
+---
+
 ## Quick Progress Overview
 
 ### Foundation
