@@ -68,3 +68,8 @@ Restart SteamVR After Registering for the Driver To Take Effect.
 ## License
 
 This Project Is for Personal and Educational Use. Built on Top of the [OpenVR SDK](https://github.com/ValveSoftware/openvr) Sample Driver (`simplehmd`) by Valve Software.
+
+MurlokVR Is Licensed Under **Either** of the Following Licenses, at Your Option:
+
+- [MIT License](LICENSE-MIT)
+- [Apache License 2.0](LICENSE-APACHE)

@@ -9,8 +9,6 @@ A Stupid Simple Custom "DIY" VR Headset. Built With Rust 🦀 and C++ (OpenVR Dr
 ## Notice
 If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Submodules As Well.
 
----
-
 ## Overview Architecture
 The MurlokVR Headset Follows a Simple Pipeline Approach Which Is Drawn as a Diagram Below:
 
@@ -21,7 +19,7 @@ The MurlokVR Headset Follows a Simple Pipeline Approach Which Is Drawn as a Diag
 ---
 
 ## Overview Components
-Components:
+**Components:**
 - Microcontroller:
     - `Waveshare ESP32-C6-(N16) (16 MB Flash Memory)`
 - Displays:
@@ -39,17 +37,15 @@ Components:
 - Miscellaneous:
     - `HDMI-Cable, USB-Cables, Jumper Wires, ...`
 
----
-
 ## Headset Design
 
 <div align="center">
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Home.png" height="350">
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Left.png" height="350">
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Back.png" height="350">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="260">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="260">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="260">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="257">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="257">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="257">
 </div>
 
 ---
@@ -74,8 +70,6 @@ Components:
 
 > *More Milestones To Be Added As the Project Evolves...*
 
----
-
 ## Known Issues
 - [ ] Rework Optics System for Easier Assembly ;( and Wider Field of View.
 
@@ -83,7 +77,21 @@ Components:
 - [ ] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
 - [ ] Fix the Rotation Issue When the Headset (Firmware) Is Starting in a `Different Position` Than Intended.
 
----
+## Useful Documentation
+```
+- Rust – Espressif HAL (Hardware Abstraction Layer):
+    - https://github.com/esp-rs/esp-hal
+    - https://docs.espressif.com/projects/rust/
+
+- BNO08X Data Sheet:
+    - https://www.ceva-ip.com/wp-content/uploads/BNO080_085-Datasheet.pdf
+
+- SH-2 Reference Manual:
+    - https://www.ceva-ip.com/wp-content/uploads/SH-2-Reference-Manual.pdf
+
+- Valve Software OpenVR SDK:
+    - https://github.com/ValveSoftware/openvr
+```
 
 ## License
 MurlokVR Is Licensed Under **Either** of the Following Licenses, at Your Option:
