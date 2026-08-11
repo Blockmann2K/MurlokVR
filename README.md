@@ -15,7 +15,7 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 The MurlokVR Headset Follows a Simple Pipeline Approach Which Is Drawn as a Diagram Below:
 
 <div align="center">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260811_Overview_Architecture.png" width="500">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260811_Overview_Architecture.png" height="1000">
 </div>
 
 ---
@@ -44,12 +44,12 @@ Components:
 ## Headset Design
 
 <div align="center">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Home.png" height="400">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Left.png" height="400">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Back.png" height="400">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="400">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="400">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="400">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Home.png" height="300">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Left.png" height="300">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Back.png" height="300">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="300">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="300">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="300">
 </div>
 
 ---
