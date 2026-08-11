@@ -33,6 +33,9 @@ If You Want To Clone This Repository, Use the `--recursive` Flag To Clone the Su
 
 ---
 
+## Known Issues
+- [ ] Rework Optics System for Easier Assembly ;( and Wider Field of View.
+
 ## Known Bugs
 - [ ] Fix the Timeout Issue When the Script Didn't Properly Clean Up.
 - [ ] Fix the Rotation Issue When the Headset (Firmware) Is Starting in a `Different Position` Than Intended.

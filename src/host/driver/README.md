@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/6e24df1e0503d4a61cd3d2ec977f46de4c6a3fad/images/MurlokVR_Logo.svg" width="400"/>
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/f273cad78da1fa17ddaa0496f60e88a7816541d6/images/20260322_MurlokVR_Logo.svg" width="400"/>
 
 # MurlokVR Driver
 A Custom OpenVR (SteamVR) Driver for the MurlokVR VR Headset.
