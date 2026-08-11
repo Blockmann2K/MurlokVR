@@ -8,7 +8,7 @@ This is the MurlokVR Runtime.
 ## Overview
 The `MurlokVR Runtime` Reads Orientation Data From an ESP32-C6 Over a Serial Connection and Makes the Processed VR Headset Pose Available Through Shared Memory.
 
-At Startup, the Runtime Configures the VR Display, Creates a Shared Memory Region for the Headset Pose, and Opens the Configured Serial Port.
+At Startup, the Runtime Configures the VR Display, Creates a Shared Memory Region for the Headset Pose and Opens the Configured Serial Port.
 
 It Then Continuously Reads Quaternion Data From the ESP32-C6, Parses the Received X/Y/Z/W Quaternion Components and Applies IMU's Mounting and Pose Corrections.
 
