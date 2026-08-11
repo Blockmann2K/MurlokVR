@@ -47,9 +47,9 @@ Components:
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Home.png" height="350">
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Left.png" height="350">
 <img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260705_Headset_3D-Model_Back.png" height="350">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="255">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="255">
-<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="255">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Outer.jpg" height="260">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_Inner.jpg" height="260">
+<img src="https://github.com/Blockmann2K/MurlokVR/blob/1b5afc2963052aec2910b212bc67a249035238cd/images/20260809_Headset_View.jpg" height="260">
 </div>
 
 ---
